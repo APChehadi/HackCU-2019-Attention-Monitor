@@ -19,8 +19,8 @@ class StatusForm(forms.Form):
     driving = forms.BooleanField(required = False)
 
 class UpdateForm(forms.Form):
-    instantAverage = forms.DecimalField(max_digits = 3, decimal_places = 2)
-    overallAverage = forms.DecimalField(max_digits = 3, decimal_places = 2)
+    instantEyeRatio = forms.DecimalField(max_digits = 3, decimal_places = 2)
+    overallEyeRatio = forms.DecimalField(max_digits = 3, decimal_places = 2)
     time = forms.IntegerField()
 
 class UpdateDriverForm(forms.Form):
@@ -39,7 +39,6 @@ def renderUserPage(request, username):
 
     #if this page recieves a post request, it will change driving to true
     #if driving is true render a different page, otherwise render the default page
-    context = {'publishData' : asfb}
     if request.method == "POST":
         form = StatusForm(request.POST)
         print(request.POST.get('driving'))
@@ -71,8 +70,21 @@ def updateUserData(request, username):
     if request.method == "POST":
         form = UpdateForm(request.POST)
         if form.is_valid():
-            instantAverage = form.cleaned_data['instantAverage']
-            overallAverage = form.cleaned_data['overallAverage']
+            instantEyeRatio = form.cleaned_data['instantEyeRatio']
+            time = form.cleaned_data['time']
+            overallEyeRatio = form.cleaned_data['overallEyeRatio']
+            InstRequest.objects.create(username = username,
+                    time = time,
+                    dataPoint = userObject.dataPoint,
+                    drNumber = userObject.drives,
+                    eyeRatio = eyeRatio)
+
+            userObject.dataPoint += 1
+
+            userObject.save()
+
+
+
             print("is  valid")
         print("Data updated user data")
         print(f"changed data: trip --- {overallAverage} --- instantaneous  --- {instantAverage}")
@@ -81,19 +93,12 @@ def updateUserData(request, username):
     return HttpResponse(_template.render())
 
 
-def postRequest(request, username):
-    if request.method == "POST":
-        form = UpdateForm(request.POST)
-        if form.is_vaupdateDrivelid():
-            instantAverage = form.cleaned_data['instantAverage']
-            overallAverage = form.cleaned_data['overallAverage']
-
-    return instantAverage, overallAverage, username
-
 
 #home page (make an account with post request)
 @csrf_exempt
 def renderHome(request):
+    print(returnDriveData("James"))
+
     template = loader.get_template('index.html')
 
     #for creating a new user
@@ -118,13 +123,15 @@ def renderHome(request):
             print(_lastname)
     return HttpResponse(template.render(contextMain))
 
+
+
+
 @csrf_exempt
 def updateDrive(request, username):
     userObject = User.objects.get(firstname = username)
     distTraveled = 0
     eyeRatio = 0
     timeSpent = 0
-post(/usr/theo/update/ date:{distTraveld: 5, eye})
 
     #listens to an updated average and adds to an array (only sent on false post request)
     if request.method == "POST":
@@ -142,6 +149,7 @@ post(/usr/theo/update/ date:{distTraveld: 5, eye})
             userObject.netSpeedAverage = ((float(userObject.netSpeedAverage) * float(userObject.drives)) + (float(_distTraveled) / float(_timeSpent))) / (float(userObject.drives + 1))
 
             userObject.drives += 1
+            userObject.dataPoint = 0
             userObject.save()
             #create a new drive tied to a user
             Driver.objects.create(distTraveled = _distTraveled,
@@ -153,3 +161,30 @@ post(/usr/theo/update/ date:{distTraveld: 5, eye})
             print(_eyeRatio)
             print(_timeSpent)
     return HttpResponse()
+
+
+def returnDriveData(username):
+        times = InstRequest.objects.filter(username = username).order_by('time').values_list('time', flat=True)
+        times = list(times)
+
+        eyeRatio = InstRequest.objects.filter(username = username).order_by('time').values_list('eyeRatio', flat=True)
+        eyeRatio = list(eyeRatio)
+
+        return eyeRatio, times
+
+def returnDriverHistoryData(username):
+        distTraveled = Driver.objects.filter(userTag = username).order_by('idVal').values_list('distTraveled', flat=True)
+        distTraveled = list(distTraveled)
+
+        eyeRatio = Driver.objects.filter(userTag = username).order_by('idVal').values_list('eyeRatio', flat=True)
+        eyeRatio = list(eyeRatio)
+
+        timeSpent = Driver.objects.filter(userTag = username).order_by('idVal').values_list('timeSpend', flat=True)
+        timeSpent = list(timeSpent)
+
+        return distTraveled, eyeRatio, timeSpent
+
+
+def returnUserData(username):
+        userObject = User.objects.get(firstname = username)
+        return userObject.lastname, userObject.firstname, userObject.age, userObject.netTimeRatio, userObject.netSpeedAverage, userObject.drives

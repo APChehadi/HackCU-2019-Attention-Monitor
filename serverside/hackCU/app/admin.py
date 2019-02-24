@@ -6,3 +6,4 @@ from .models import *
 
 admin.site.register(User)
 admin.site.register(Driver)
+admin.site.register(InstRequest)

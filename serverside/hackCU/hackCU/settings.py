@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -25,7 +24,7 @@ SECRET_KEY = 'q_5)#$m4s6e3ax4se#3w^bgk4^b9+)m=v)=%-xu8=q2=mok!34'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'fb40938e.ngrok.io']
+ALLOWED_HOSTS = ['localhost', 'fb40938e.ngrok.io',  '10.235.144.46']
 
 
 # Application definition
@@ -119,3 +118,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+ADMIN_MEDIA_PREFIX = '/static/admin/'
