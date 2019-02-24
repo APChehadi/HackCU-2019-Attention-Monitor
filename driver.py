@@ -3,6 +3,7 @@ import numpy as np
 from facial import EyeDetector
 import time
 import requests
+import geocoder
 
 
 cv2.namedWindow('frame', cv2.WINDOW_NORMAL)
@@ -20,11 +21,12 @@ class Driver:
 		self.result = 0
 		self.looking = False
 		self.start = time.time()
-		print(self.start)
+		self.begin = time.time()
 		self.postTimer = 0
 		self.elapsed = 0
 		self.nonAttentionTimer = 0
-
+		#as demo is with laptop without gps, location is based on ip address
+		self.startLocation = geocoder.ip('me')
 		f = open('user_settings.txt', 'r')
 		self.user = f.readline().split(':')[1].split(chr(10))[0]
 		self.URL = "https://" + f.readline().split(':')[1].split(chr(10))[0]
@@ -59,7 +61,10 @@ class Driver:
 				instantAverage = self.result / self.total
 				overallAverage = self.runningResult / self.runningTotal
 				print("Current: %i%%, Running: %i%%" % (int(instantAverage * 100), int(overallAverage * 100)))
-				r = requests.post(self.URL + "/users/" + self.user + "/update/", data={'instantAverage':format(instantAverage, '.2f'), 'overallAverage':format(overallAverage, '.2f')})
+				r = requests.post(self.URL + "/users/" + self.user + "/update/", 
+					data={'instantAverage':format(instantAverage, '.2f'), 
+					'overallAverage':format(overallAverage, '.2f')}
+					)
 				self.result = 0
 				self.total = 0
 				self.postTimer = 0
@@ -74,12 +79,20 @@ class Driver:
 			if k == 27:
 				break
 			elif k == ord('s'): 
-				# saving images for presenting purposes
+				# saving images for presenting
 				cv2.imwrite('devImage.png', frame)
  
 	def __del__(self):
 		self.cap.release()
 		cv2.destroyAllWindows()
+
+		#this line would be replaced with gps
+		#endLocation = geocoder.ip['me']
+		
+
+		r = requests.post(self.URL + "/users/" + self.user + "/addDrive/", 
+			data={'distTraveled': 15, 'eyeRatio':format(self.runningResult/self.runningTotal, '.2f'), 
+			'timeSpent':int(time.time() - self.begin)})
 		r = requests.post(self.URL + "/users/" + self.user + "/", data={'driving': False})
 
 
