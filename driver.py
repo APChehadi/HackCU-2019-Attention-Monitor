@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import time
+import random
 import requests
 import geocoder
 import json
@@ -35,6 +36,11 @@ class Driver:
 		self.user = f.readline().split(':')[1].split(chr(10))[0]
 		self.URL = "https://" + f.readline().split(':')[1].split(chr(10))[0]
 
+		f.close()
+		self.addresses = []
+		f = open('addresses.txt', 'r')
+		for line in f.readlines():
+			self.addresses += [line.split(chr(10))[0]]
 		f.close()
 
 		print(self.URL + "/users/" + self.user + "/")
@@ -94,7 +100,7 @@ class Driver:
 		#endLocation = geocoder.ip['me']
 		position = self.startLocation.latlng
 		source = str(position[0]) + "," + str(position[1])
-		destpos = distance.getGeocode('2414 Regend Dr, Boulder, CO 80309').json()
+		destpos = distance.getGeocode(random.choice(self.addresses)).json()
 
 		#print(destpos)
 		dest = str(destpos['results'][0]['geometry']['location']['lat']) + "," + str(destpos['results'][0]['geometry']['location']['lng'])
