@@ -14,66 +14,76 @@ contextMain = {}
 
 
 # Create your views here.
-
+######################################FORMS######################################
 class UserForm(forms.Form):
     firstname = forms.CharField(max_length = 100)
     lastname = forms.CharField(max_length = 255)
     age = forms.IntegerField()
 
-
 class StatusForm(forms.Form):
     driving = forms.BooleanField(required = False)
 
 class UpdateForm(forms.Form):
-    instantAverage = forms.IntegerField()
-    tripAverage = forms.IntegerField()
+    instantAverage = forms.DecimalField(max_digits = 3, decimal_places = 2)
+    overallAverage = forms.DecimalField(max_digits = 3, decimal_places = 2)
 
+class UpdateDriverForm(forms.Form):
+    distTraveled = forms.IntegerField()
+    eyeRatio = forms.DecimalField(max_digits=3, decimal_places=2)
+    timeSpent = forms.IntegerField()
 
-#works
+#render unique page for a user
 @csrf_exempt
 def renderUserPage(request, username):
-    
+
     #user object is the username (should be using id in the url but this is a hackathon, easy to change)
     userObject = User.objects.get(firstname = username)
-    
+
     #if this page recieves a post request, it will change driving to true
     #if driving is true render a different page, otherwise render the default page
 
     if request.method == "POST":
         form = StatusForm(request.POST)
     print(request.POST.get('driving'))
+    #only listens to on / off switch
     if form.is_valid():
             #change the state of the driver
             print(form.cleaned_data['driving'])
             userObject.driving = form.cleaned_data['driving']
             userObject.save()
-    
+
     if userObject.driving:
         _template = "driving.html"
     else:
         _template = "notDriving.html"
 
     template = loader.get_template(_template)
-    
+
     return HttpResponse(template.render(contextMain))
 
 
-
+#update the data for the user
 @csrf_exempt
 def updateUserData(request, username):
     userObject = User.objects.get(firstname = username)
+    instantAverage = -1
+    tripAverage = -1
+
+    #listens to an updated average and adds to an array
     if request.method == "POST":
         form = UpdateForm(request.POST)
         if form.is_valid():
             instantAverage = form.cleaned_data['instantAverage']
-            tripAverage = form.cleaned_data['tripAverage']
-            
+            overallAverage = form.cleaned_data['overallAverage']
+            print("is  valid")
         print("Data updated user data")
-        print(f"changed data: trip --- {tripAverage} --- instantaneous  --- {instantAverage}")
+        print(f"changed data: trip --- {overallAverage} --- instantaneous  --- {instantAverage}")
     template = "driving.html"
     _template = loader.get_template(template)
     return HttpResponse(_template.render())
 
+
+#home page (make an account with post request)
 @csrf_exempt
 def renderHome(request):
     template = loader.get_template('index.html')
@@ -99,10 +109,32 @@ def renderHome(request):
             print(_lastname)
     return HttpResponse(template.render(contextMain))
 
+@csrf_exempt
+def updateDrive(request, username):
+    userObject = User.objects.get(firstname = username)
+    distTraveled = -1
+    eyeRatio = -1
+    timeSpent = -1
 
 
-def updateData(request):
+    #listens to an updated average and adds to an array
     if request.method == "POST":
-        form = UpdateForm(request.POST)
+        form = UpdateDriverForm(request.POST)
         if form.is_valid():
-            _
+            _distTraveled = form.cleaned_data['distTraveled']
+            _eyeRatio = form.cleaned_data['eyeRatio']
+            _timeSpent = form.cleaned_data['timeSpent']
+
+            _id = userObject.drives + 1
+            _userTag = username
+
+            #create a new drive tied to a user
+            Driver.objects.create(distTraveled = _distTraveled,
+                                eyeRatio = _eyeRatio,
+                                timeSpent = _timeSpent,
+                                idVal = _id,
+                                userTag = _userTag)
+            print(_distTraveled)
+            print(_eyeRatio)
+            print(_timeSpent)
+    return HttpResponse()

@@ -14,7 +14,7 @@ r = requests.post('<URL>/users/<USER>/', data={'driving': <BOOL>})
 
 
 "FALSE" <<NOT IMPLIMENTED YET>>
-r = requests.post()
+requests.post('<URL>/users/<USER>/addDrive/', data={'distTraveled':<Integer>,'eyeRatio':<double 0 - 0.99>,'timeSpent':<Integer>})
 
 
 

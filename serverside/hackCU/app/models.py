@@ -25,3 +25,14 @@ class User(models.Model):
     def __str__(self):
         return self.firstname
 
+
+class Driver(models.Model):
+
+    #in miles
+    distTraveled = models.IntegerField()
+    eyeRatio = models.DecimalField(max_digits = 3, decimal_places = 2)
+    timeSpent = models.IntegerField()
+
+    idVal = models.IntegerField()
+    # assigns to a user of userTag (username / firstname)
+    userTag = models.CharField(max_length = 30)
