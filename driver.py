@@ -40,7 +40,7 @@ class Driver:
 
 			#adjust post timer
 			if self.postTimer > 5:
-				print("Current: %f%%, Running: %f%%" % (int(self.result * 100 / self.total), int(self.runningResult * 100 / self.runningTotal)))
+				print("Current: %i%%, Running: %i%%" % (int(self.result * 100 / self.total), int(self.runningResult * 100 / self.runningTotal)))
 				self.result = 0
 				self.total = 0
 				self.postTimer = 0
@@ -51,7 +51,10 @@ class Driver:
 			k = cv2.waitKey(1) & 0xFF
 			if k == 27:
 				break
-
+			elif k == ord('s'): 
+				# saving images for presenting purposes
+				cv2.imwrite('devImage.png', frame)
+ 
 	def __del__(self):
 		self.cap.release()
 		cv2.destroyAllWindows()
