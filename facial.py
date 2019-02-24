@@ -7,8 +7,8 @@ class EyeDetector:
 	# __init__(): initialize locations of haarcascade xml files
 	def __init__(self):
 		#change location of these if xml files are moved
-		#self.faceCascade = cv2.CascadeClassifier('data/haarcascade_frontalface_default.xml')
-		self.faceCascade = cv2.CascadeClassifier('data/haarcascade_frontalface_alt2.xml')
+		self.faceCascade = cv2.CascadeClassifier('data/haarcascade_frontalface_default.xml')
+		#self.faceCascade = cv2.CascadeClassifier('data/haarcascade_frontalface_alt2.xml')
 		self.eyeCascade = cv2.CascadeClassifier('data/haarcascade_eye.xml')
 		self.publish = 0
 
