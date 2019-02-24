@@ -1,13 +1,8 @@
 from django.shortcuts import render
-
 from django.http import HttpResponse
-
 from django.template import loader
-
 from django.views.decorators.csrf import csrf_exempt
-
 from .models import *
-
 from django import forms
 
 contextMain = {}
@@ -26,6 +21,7 @@ class StatusForm(forms.Form):
 class UpdateForm(forms.Form):
     instantAverage = forms.DecimalField(max_digits = 3, decimal_places = 2)
     overallAverage = forms.DecimalField(max_digits = 3, decimal_places = 2)
+    time = forms.IntegerField()
 
 class UpdateDriverForm(forms.Form):
     distTraveled = forms.IntegerField()
@@ -43,7 +39,7 @@ def renderUserPage(request, username):
 
     #if this page recieves a post request, it will change driving to true
     #if driving is true render a different page, otherwise render the default page
-
+    context = {'publishData' : asfb}
     if request.method == "POST":
         form = StatusForm(request.POST)
         print(request.POST.get('driving'))
@@ -85,6 +81,16 @@ def updateUserData(request, username):
     return HttpResponse(_template.render())
 
 
+def postRequest(request, username):
+    if request.method == "POST":
+        form = UpdateForm(request.POST)
+        if form.is_vaupdateDrivelid():
+            instantAverage = form.cleaned_data['instantAverage']
+            overallAverage = form.cleaned_data['overallAverage']
+
+    return instantAverage, overallAverage, username
+
+
 #home page (make an account with post request)
 @csrf_exempt
 def renderHome(request):
@@ -106,6 +112,7 @@ def renderHome(request):
                     netSpeedAverage = 0,
                     drives = 0,
                     driving = False)
+            #create new user name
             print(_age)
             print(_firstname)
             print(_lastname)
@@ -117,7 +124,7 @@ def updateDrive(request, username):
     distTraveled = 0
     eyeRatio = 0
     timeSpent = 0
-
+post(/usr/theo/update/ date:{distTraveld: 5, eye})
 
     #listens to an updated average and adds to an array (only sent on false post request)
     if request.method == "POST":

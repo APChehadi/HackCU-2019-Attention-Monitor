@@ -2,6 +2,22 @@ import requests
 
 #send the small data to the graphs
 
+#userdata
+from .models import *
+person = User.objects.get(firstname = <NAME>)
+#get firstname
+person.firstname
+person.lastname
+person.age
+#ratio eyes on over all
+person.netTimeRatio
+person.netSpeedAverage
+#boolean on or off (will always be off on this page, no need to worry about this)
+person.driving
+#number of drives completed
+person.drives
+
+
 
 <URL> Global
 
