@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import  *
-from .apps import updateUserData
+from .BokehDataLive import *
 
 urlpatterns = [
         path('', renderHome, name='home'),
@@ -13,7 +13,7 @@ urlpatterns = [
         #handels  specific data being sent to the user
         path('users/<str:username>/update/', updateUserData),
         path('users/<str:username>/addDrive/', updateDrive),
-        #path('users/<str:username>/stats/', updateUserData),
+        path('users/example/stats/', make_doc),
 
         ]
 

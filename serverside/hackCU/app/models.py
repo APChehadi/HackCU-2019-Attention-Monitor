@@ -20,6 +20,7 @@ class User(models.Model):
     #number of drives
     drives = models.IntegerField()
 
+    dataPoint = models.IntegerField()
 
 
     def __str__(self):
@@ -36,3 +37,12 @@ class Driver(models.Model):
     idVal = models.IntegerField()
     # assigns to a user of userTag (username / firstname)
     userTag = models.CharField(max_length = 30)
+
+
+
+class InstRequest(models.Model):
+    username = models.CharField(max_length = 200)
+    time = models.IntegerField()
+    dataPoint = models.IntegerField()
+    drNumber = models.IntegerField()
+    eyeRatio = models.DecimalField(max_digits = 3, decimal_places = 2)
