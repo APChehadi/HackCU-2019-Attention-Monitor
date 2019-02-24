@@ -51,15 +51,15 @@ class GraphCreation():
         return (histo,lineGraph)
 if __name__ == "__main__":
 
-    p1 = GraphCreation("Eye Ratio Tracking", week)
-    histo = p1.make_histo('Eye Ratio', 'Frequency')
+    # p1 = GraphCreation("Eye Ratio Tracking", week)
+    # histo = p1.make_histo('Eye Ratio', 'Frequency')
 
-    lineGraph = p1.make_line_plot("Time", "Eye Ratio")
+    # lineGraph = p1.make_line_plot("Time", "Eye Ratio")
     
 
-    output_file('Graphs.html', title="histogram.py example")
-    grid = gridplot([histo, lineGraph], ncols=2, plot_width=400, plot_height=400)
-    show(grid)
+    # output_file('Graphs.html', title="histogram.py example")
+    # grid = gridplot([histo, lineGraph], ncols=2, plot_width=400, plot_height=400)
+    # show(grid)
 
 
 
