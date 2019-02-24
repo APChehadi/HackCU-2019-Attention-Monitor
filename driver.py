@@ -95,7 +95,7 @@ class Driver:
 
 			if self.nonAttentionTimer > 20:
 				print("PLEASE PAY ATTENTION")
-				r = requests.post(self.URL + "/twilio")
+				#r = requests.post(self.URL + "/twilio")
 				if not self.smsSent:
 					self.smsSent = True
 					r = requests.post(self.URL + "/twilio")
@@ -120,10 +120,10 @@ class Driver:
 		source = str(position[0]) + "," + str(position[1])
 		destpos = distance.getGeocode(random.choice(self.addresses)).json()
 		dest = str(destpos['results'][0]['geometry']['location']['lat']) + "," + str(destpos['results'][0]['geometry']['location']['lng'])
-
 		response = distance.getDistance(source, dest)
 		#print(json.dumps(response.json(), indent=4, sort_keys=True))
 		dist = response.json()['rows'][0]['elements'][0]['distance']['value']
+		print("Traveling to: %s\n%s" % (response.json()['destination_addresses'][0], response.json()['rows'][0]['elements'][0]['distance']['text']))
 
 		r = requests.post(self.URL + "/users/" + self.user + "/addDrive/", 
 			data={'distTraveled': dist, 'eyeRatio':format(self.runningResult/self.runningTotal, '.2f'), 

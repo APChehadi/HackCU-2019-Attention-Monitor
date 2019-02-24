@@ -26,8 +26,6 @@ class EyeDetector:
 			roi_gray = gray[y:y+h, x:x+w]
 			roi_color = frame[y:y+h, x:x+w]
 			eyes = self.eyeCascade.detectMultiScale(roi_gray, 1.1, 10)
-			#blur = cv2.GaussianBlur(roi_gray, (5, 5), 0)
-			#blur = cv2.medianBlur(roi_gray, 7)
 			for (ex, ey, ew, eh) in eyes:
 				cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)				
 				blur = cv2.medianBlur(roi_gray[ey:ey+eh, ex:ex + ew], 7)
