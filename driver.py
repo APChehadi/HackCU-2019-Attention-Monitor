@@ -25,6 +25,9 @@ class Driver:
 		self.total = 0
 		self.result = 0
 		self.looking = False
+		self.strikes = 0
+		self.smsSent = False
+		self.geolocationRefresh = False
 		self.start = time.time()
 		self.begin = time.time()
 		self.postTimer = 0
@@ -35,8 +38,8 @@ class Driver:
 		f = open('user_settings.txt', 'r')
 		self.user = f.readline().split(':')[1].split(chr(10))[0]
 		self.URL = "https://" + f.readline().split(':')[1].split(chr(10))[0]
-
 		f.close()
+		#fill addresses from Boulder CO
 		self.addresses = []
 		f = open('addresses.txt', 'r')
 		for line in f.readlines():
@@ -63,24 +66,39 @@ class Driver:
 
 			if not res:
 				self.nonAttentionTimer += self.elapsed
-			else:
+				self.looking = False
+			else:				
 				self.nonAttentionTimer = 0
+				self.looking = True
 
 			#adjust post timer
 			if self.postTimer > 5:
 				instantAverage = self.result / self.total
 				overallAverage = self.runningResult / self.runningTotal
-				print("Current: %i%%, Running: %i%%" % (int(instantAverage * 100), int(overallAverage * 100)))
+				print("Current EyeTrack Average: %i%%, Running EyeTrack Average: %i%%" % (int(instantAverage * 100), int(overallAverage * 100)))
 				r = requests.post(self.URL + "/users/" + self.user + "/update/", 
-					data={'instantAverage':format(instantAverage, '.2f'), 
-					'overallAverage':format(overallAverage, '.2f')}
+					data={'instantEyeRatio':format(instantAverage, '.2f'), 
+					'overallEyeRatio':format(overallAverage, '.2f'),
+					'time': int(time.time() - self.begin)}
 					)
 				self.result = 0
 				self.total = 0
 				self.postTimer = 0
 
+				self.geolocationRefresh = not self.geolocationRefresh
+				if self.geolocationRefresh:
+					result = distance.getGeolocation().json()
+					weather = distance.getWeather(str(result['location']['lat']), str(result['location']['lng'])).json()
+					print("At latitude: %.2f and longitude %.2f" % (weather['coord']['lat'], weather['coord']['lon']))
+					print("The weather is %s with %i min and %i max" % (weather['weather'][0]['description'],
+						int(weather['main']['temp_min']), int(weather['main']['temp_max'])))
+
 			if self.nonAttentionTimer > 20:
 				print("PLEASE PAY ATTENTION")
+				r = requests.post(self.URL + "/twilio")
+				if not self.smsSent:
+					self.smsSent = True
+					r = requests.post(self.URL + "/twilio")
 
 			frame = self.eyedec.getFrame()
 			cv2.imshow('frame', frame)
@@ -101,12 +119,10 @@ class Driver:
 		position = self.startLocation.latlng
 		source = str(position[0]) + "," + str(position[1])
 		destpos = distance.getGeocode(random.choice(self.addresses)).json()
-
-		#print(destpos)
 		dest = str(destpos['results'][0]['geometry']['location']['lat']) + "," + str(destpos['results'][0]['geometry']['location']['lng'])
 
 		response = distance.getDistance(source, dest)
-		print(json.dumps(response.json(), indent=4, sort_keys=True))
+		#print(json.dumps(response.json(), indent=4, sort_keys=True))
 		dist = response.json()['rows'][0]['elements'][0]['distance']['value']
 
 		r = requests.post(self.URL + "/users/" + self.user + "/addDrive/", 
