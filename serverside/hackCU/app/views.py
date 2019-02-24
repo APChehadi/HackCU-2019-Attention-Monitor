@@ -14,7 +14,7 @@ contextMain = {}
 
 
 # Create your views here.
-######################################FORMS######################################
+######################################     FORMS     ######################################
 class UserForm(forms.Form):
     firstname = forms.CharField(max_length = 100)
     lastname = forms.CharField(max_length = 255)
@@ -29,9 +29,11 @@ class UpdateForm(forms.Form):
 
 class UpdateDriverForm(forms.Form):
     distTraveled = forms.IntegerField()
-    eyeRatio = forms.DecimalField(max_digits=3, decimal_places=2)
+    eyeRatio = forms.DecimalField(max_digits=5, decimal_places=2)
     timeSpent = forms.IntegerField()
 
+
+######################################     RENDERERS     ######################################
 #render unique page for a user
 @csrf_exempt
 def renderUserPage(request, username):
@@ -44,9 +46,9 @@ def renderUserPage(request, username):
 
     if request.method == "POST":
         form = StatusForm(request.POST)
-    print(request.POST.get('driving'))
-    #only listens to on / off switch
-    if form.is_valid():
+        print(request.POST.get('driving'))
+        #only listens to on / off switch
+        if form.is_valid():
             #change the state of the driver
             print(form.cleaned_data['driving'])
             userObject.driving = form.cleaned_data['driving']
@@ -112,12 +114,12 @@ def renderHome(request):
 @csrf_exempt
 def updateDrive(request, username):
     userObject = User.objects.get(firstname = username)
-    distTraveled = -1
-    eyeRatio = -1
-    timeSpent = -1
+    distTraveled = 0
+    eyeRatio = 0
+    timeSpent = 0
 
 
-    #listens to an updated average and adds to an array
+    #listens to an updated average and adds to an array (only sent on false post request)
     if request.method == "POST":
         form = UpdateDriverForm(request.POST)
         if form.is_valid():
@@ -128,6 +130,12 @@ def updateDrive(request, username):
             _id = userObject.drives + 1
             _userTag = username
 
+            #update user
+            userObject.netTimeRatio = (float(userObject.netTimeRatio * userObject.drives) + float(_eyeRatio)) / float(userObject.drives + 1)
+            userObject.netSpeedAverage = ((float(userObject.netSpeedAverage) * float(userObject.drives)) + (float(_distTraveled) / float(_timeSpent))) / (float(userObject.drives + 1))
+
+            userObject.drives += 1
+            userObject.save()
             #create a new drive tied to a user
             Driver.objects.create(distTraveled = _distTraveled,
                                 eyeRatio = _eyeRatio,
