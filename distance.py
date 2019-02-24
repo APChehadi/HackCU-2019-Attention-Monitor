@@ -1,7 +1,7 @@
 import requests
 
 #google api key
-key = "AIzaSyDg8vHOW6g5lLOPhVex902xO4E4QPPDYbc"
+key = -
 
 #RapidAPI :()
 #response = requests.post("https://GoogleMapsDistanceMatrixstefan.skliarovV1.p.rapidapi.com/getBicyclingDistanceMatrix",
