@@ -1,9 +1,13 @@
 import cv2
 import numpy as np
-from facial import EyeDetector
 import time
 import requests
 import geocoder
+import json
+from facial import EyeDetector
+import distance
+
+
 
 
 cv2.namedWindow('frame', cv2.WINDOW_NORMAL)
@@ -88,10 +92,19 @@ class Driver:
 
 		#this line would be replaced with gps
 		#endLocation = geocoder.ip['me']
-		
+		position = self.startLocation.latlng
+		source = str(position[0]) + "," + str(position[1])
+		destpos = distance.getGeocode('2414 Regend Dr, Boulder, CO 80309').json()
+
+		#print(destpos)
+		dest = str(destpos['results'][0]['geometry']['location']['lat']) + "," + str(destpos['results'][0]['geometry']['location']['lng'])
+
+		response = distance.getDistance(source, dest)
+		print(json.dumps(response.json(), indent=4, sort_keys=True))
+		dist = response.json()['rows'][0]['elements'][0]['distance']['value']
 
 		r = requests.post(self.URL + "/users/" + self.user + "/addDrive/", 
-			data={'distTraveled': 15, 'eyeRatio':format(self.runningResult/self.runningTotal, '.2f'), 
+			data={'distTraveled': dist, 'eyeRatio':format(self.runningResult/self.runningTotal, '.2f'), 
 			'timeSpent':int(time.time() - self.begin)})
 		r = requests.post(self.URL + "/users/" + self.user + "/", data={'driving': False})
 
