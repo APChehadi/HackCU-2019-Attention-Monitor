@@ -1,1 +1,34 @@
-Not driving
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- change this title, loading from my stylesheet, bootstrap, and and a google font -->
+		<title>Graph Page and stuff</title>
+		<link href="https://fonts.googleapis.com/css?family=Laila" rel="stylesheet">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static "style.css" %}">
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	</head>
+	<body>
+		<div>
+			<br><br>
+			<h1 class="text-center">{{ NAME }}</h1>
+			<br>
+			<div class="row">
+				<div class="col-md-4">
+					<h4 class="text-center">Average Line</h4>
+					<!-- something here to draw to the graph -->
+				</div>
+				<div class="col-md-4">
+					<h4 class="text-center">Histogram</h4>
+					<!-- etc -->
+				</div>
+				<div class="col-md-4">
+					<h4 class="text-center">Graph 3</h4>
+					<!-- etc -->
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>

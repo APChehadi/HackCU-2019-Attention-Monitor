@@ -55,7 +55,7 @@ def renderUserPage(request, username):
         _template = "notDriving.html"
 
     template = loader.get_template(_template)
-
+    contextMain = {"NAME" : username}
     return HttpResponse(template.render(contextMain))
 
 
@@ -116,7 +116,8 @@ def renderHome(request):
                     netTimeRatio = 0,
                     netSpeedAverage = 0,
                     drives = 0,
-                    driving = False)
+                    driving = False,
+                    dataPoint = 0)
             #create new user name
             print(_age)
             print(_firstname)
@@ -161,6 +162,13 @@ def updateDrive(request, username):
             print(_eyeRatio)
             print(_timeSpent)
     return HttpResponse()
+
+@csrf_exempt
+def render_twilio(request):
+    _template = "twilionode.html"
+    template = loader.get_template(_template)
+    return HttpResponse(template.render())
+
 
 
 def returnDriveData(username):
