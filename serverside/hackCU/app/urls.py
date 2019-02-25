@@ -14,10 +14,10 @@ urlpatterns = [
         path('users/<str:username>/update/', updateUserData),
         path('users/<str:username>/addDrive/', updateDrive),
         path('users/example/stats/', make_doc),
-        path('sms', render_twilio)
+        path('twilio', twilioReaction),
+        path('rendergraph/<str:username>/', runFunction),
 
         ]
 
 
 #timeSpent
-#
