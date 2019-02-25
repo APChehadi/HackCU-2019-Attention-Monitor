@@ -93,7 +93,7 @@ class Driver:
 					print("The weather is %s with %i min and %i max" % (weather['weather'][0]['description'],
 						int(weather['main']['temp_min']), int(weather['main']['temp_max'])))
 
-			if self.nonAttentionTimer > 20:
+			if self.nonAttentionTimer > 10:
 				print("PLEASE PAY ATTENTION")
 				#r = requests.post(self.URL + "/twilio")
 				if not self.smsSent:
