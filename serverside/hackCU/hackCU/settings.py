@@ -24,7 +24,7 @@ SECRET_KEY = 'q_5)#$m4s6e3ax4se#3w^bgk4^b9+)m=v)=%-xu8=q2=mok!34'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '3d519ad5.ngrok.io',  'hackcuimagefacedetection.serveo.net']
+ALLOWED_HOSTS = ['localhost', '3d519ad5.ngrok.io', '127.0.0.1', 'hackcuimagefacedetection.serveo.net']
 
 
 # Application definition

@@ -37,7 +37,7 @@ class Driver:
 		self.startLocation = geocoder.ip('me')
 		f = open('user_settings.txt', 'r')
 		self.user = f.readline().split(':')[1].split(chr(10))[0]
-		self.URL = "https://" + f.readline().split(':')[1].split(chr(10))[0]
+		self.URL = "http://" + f.readline().split(':')[1].split(chr(10))[0]
 		f.close()
 		#fill addresses from Boulder CO
 		self.addresses = []
