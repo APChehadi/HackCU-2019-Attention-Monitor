@@ -18,7 +18,7 @@ class Driver:
 
 	def __init__(self):
 		#change sourcle of videocapture based on webcam USB slot
-		self.cap = cv2.VideoCapture(4)
+		self.cap = cv2.VideoCapture(0)
 		self.eyedec = EyeDetector()
 		self.runningTotal = 0
 		self.runningResult = 0

@@ -42,7 +42,7 @@ while True:
             minval = cv.getTrackbarPos("Bottom", "TrackBars")
             print("Min",minval)
             ret, thresh1 = cv.threshold(roi_eye1,minval,maxval, cv.THRESH_BINARY)
-            cv.imshow("Thresh", thresh1)s
+            cv.imshow("Thresh", thresh1)
 
 
             # cv.imshow("eye1", roi_eye1)
