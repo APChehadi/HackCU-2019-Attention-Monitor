@@ -38,6 +38,7 @@ class Driver:
 		f = open('user_settings.txt', 'r')
 		self.user = f.readline().split(':')[1].split(chr(10))[0]
 		self.URL = "http://" + f.readline().split(':')[1].split(chr(10))[0]
+		#self.URL = "https://" + f.readline().split(':')[1].split(chr(10))[0]
 		f.close()
 		#fill addresses from Boulder CO
 		self.addresses = []
@@ -105,7 +106,7 @@ class Driver:
 
 			k = cv2.waitKey(1) & 0xFF
 			if k == 27:
-				break
+			        break
 			elif k == ord('s'): 
 				# saving images for presenting
 				cv2.imwrite('devImage.png', frame)

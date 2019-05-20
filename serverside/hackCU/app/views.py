@@ -87,6 +87,7 @@ def renderUserPage(request, username):
         #
         contextMain = {"NAME":username, "eyeRatio":eyeRatio, "times":times}
     else:
+        deleteDriveData(username)
         _template = "notDriving.html"
         lastname, firstname, age, netTimeRatio, netSpeedAverage, drives = returnUserData(username)
 
@@ -240,12 +241,19 @@ def render_twilio(request):
 
 def returnDriveData(username):
         times = InstRequest.objects.filter(username = username).order_by('time').values_list('time', flat=True)
+        #times = InstRequest.objects.filter(username = username).values_list('time', flat=True)
         times = list(times)
 
         eyeRatio = InstRequest.objects.filter(username = username).order_by('time').values_list('eyeRatio', flat=True)
         eyeRatio = list(eyeRatio)
         # print(eyeRatio, times)
         return eyeRatio, times
+
+
+def deleteDriveData(username):
+        times = InstRequest.objects.filter(username = username)
+        times.delete()
+
 
 def returnDriverHistoryData(username):
         distTraveled = Driver.objects.filter(userTag = username).order_by('idVal').values_list('distTraveled', flat=True)
